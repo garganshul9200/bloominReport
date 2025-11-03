@@ -15,7 +15,9 @@ import {
   ShowError,
   validateFields,
   validateLocationData,
+  showSuccess,
 } from '../../utils/helperFunctions';
+import { getFarmerDataService } from '../../utils/realmService';
 
 const FarmerHome = () => {
   const navigation = useNavigation();
@@ -85,7 +87,7 @@ const FarmerHome = () => {
     setShowManualEntry(true);
   }, []);
 
-  const handleNavigateToLandDetails = useCallback(() => {
+  const handleNavigateToLandDetails = useCallback(async () => {
     try {
       // Validate required fields
       const isValid = validateFields([
@@ -100,6 +102,26 @@ const FarmerHome = () => {
 
       // Validate location data
       if (!validateLocationData(locationData, ['state', 'village'])) {
+        return;
+      }
+
+      // Save data to Realm
+      try {
+        const farmerService = await getFarmerDataService();
+        await farmerService.updateFarmerData({
+          fullName,
+          contactNumber,
+          gender,
+          locationState: locationData.state,
+          locationVillage: locationData.village,
+          locationBlockName: locationData.blockName,
+          locationStreetName: locationData.streetName,
+          locationPlotNumber: locationData.plotNumber,
+        });
+        showSuccess('Farmer profile data saved successfully');
+      } catch (realmError) {
+        console.error('Error saving farmer data:', realmError);
+        ShowError('Failed to save data. Please try again.');
         return;
       }
 

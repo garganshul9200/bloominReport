@@ -12,7 +12,8 @@ import CustomRadioButton from '../../components/CustomRadioButton';
 import CustomButton from '../../components/CustomButton';
 import navigationStrings from '../../constants/navigationStrings';
 import { styles } from './Styles';
-import { ShowError, validateFields } from '../../utils/helperFunctions';
+import { ShowError, validateFields, showSuccess } from '../../utils/helperFunctions';
+import { getFarmerDataService } from '../../utils/realmService';
 
 const LandDetails = () => {
   const navigation = useNavigation();
@@ -67,7 +68,7 @@ const LandDetails = () => {
   }, []);
 
 
-  const handleNext = useCallback(() => {
+  const handleNext = useCallback(async () => {
     try {
       // Validate required fields
       const isValid = validateFields([
@@ -77,6 +78,21 @@ const LandDetails = () => {
       ]);
 
       if (!isValid) {
+        return;
+      }
+
+      // Save data to Realm
+      try {
+        const farmerService = await getFarmerDataService();
+        await farmerService.updateFarmerData({
+          areaValue,
+          unitOfArea,
+          landHolding,
+        });
+        showSuccess('Land details saved successfully');
+      } catch (realmError) {
+        console.error('Error saving land details:', realmError);
+        ShowError('Failed to save data. Please try again.');
         return;
       }
 

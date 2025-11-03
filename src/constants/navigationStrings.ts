@@ -5,4 +5,5 @@ export default{
     FLOWER_DETAILS:'FlowerDetails',
     BEEKEEPING_DETAILS:'BeekeepingDetails',
     CURRENT_LOCATION:'CurrentLocation',
+    DETAILS_ADDED:'DetailsAdded',
 }

@@ -8,16 +8,20 @@
 import { NewAppScreen } from '@react-native/new-app-screen';
 import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
 import FlashMessage from 'react-native-flash-message';
+import { RealmProvider } from '@realm/react';
 import Routes from './src/navigations/Routes';
+import { realmConfig } from './src/utils/realmService';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
 
   return (
-    <View style={styles.container}>
-      <FlashMessage position="top" />
-      <Routes />
-    </View>
+    <RealmProvider {...realmConfig}>
+      <View style={styles.container}>
+        <FlashMessage position="top" />
+        <Routes />
+      </View>
+    </RealmProvider>
   );
 }
 

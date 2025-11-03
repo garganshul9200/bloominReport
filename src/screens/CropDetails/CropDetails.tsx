@@ -15,6 +15,8 @@ import colors from '../../constants/colors';
 import { styles } from './Styles';
 import navigationStrings from '../../constants/navigationStrings';
 import { useNavigation } from '@react-navigation/native';
+import { getFarmerDataService } from '../../utils/realmService';
+import { ShowError, showSuccess } from '../../utils/helperFunctions';
 
 interface BloomingDuration {
   id: number;
@@ -120,9 +122,33 @@ const CropDetails = () => {
     });
   }, []);
 
-  const handleComplete = useCallback(() => {
-    navigation.navigate(navigationStrings.FLOWER_DETAILS as never);
-  }, [navigation]);
+  const handleComplete = useCallback(async () => {
+    try {
+      // Save data to Realm
+      try {
+        const farmerService = await getFarmerDataService();
+        await farmerService.updateFarmerData({
+          flower1,
+          flowerTypes,
+          hybridCropVariety,
+          bloomingDurations: bloomingDurations as any,
+          currentAreaOfFlowering,
+          selectedPhotos: selectedPhotos,
+        });
+        showSuccess('Crop details saved successfully');
+      } catch (realmError) {
+        console.error('Error saving crop details:', realmError);
+        ShowError('Failed to save data. Please try again.');
+        return;
+      }
+
+      // Navigate to next screen
+      navigation.navigate(navigationStrings.FLOWER_DETAILS as never);
+    } catch (error) {
+      console.error('Error navigating to flower details:', error);
+      ShowError('Failed to proceed. Please try again.');
+    }
+  }, [navigation, flower1, flowerTypes, hybridCropVariety, bloomingDurations, currentAreaOfFlowering, selectedPhotos]);
 
   const flowerTypesOptions = useMemo(
     () => FLOWER_TYPES.map(option => ({ label: option, value: option })),

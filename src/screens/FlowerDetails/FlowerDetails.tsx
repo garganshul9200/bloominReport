@@ -9,6 +9,8 @@ import CustomButton from '../../components/CustomButton';
 import colors from '../../constants/colors';
 import navigationStrings from '../../constants/navigationStrings';
 import { styles } from './Styles';
+import { getFarmerDataService } from '../../utils/realmService';
+import { ShowError, showSuccess } from '../../utils/helperFunctions';
 
 const FlowerDetails = () => {
   const navigation = useNavigation();
@@ -55,9 +57,32 @@ const FlowerDetails = () => {
     [],
   );
 
-  const handleComplete = useCallback(() => {
-    navigation.navigate(navigationStrings.BEEKEEPING_DETAILS as never);
-  }, [navigation]);
+  const handleComplete = useCallback(async () => {
+    try {
+      // Save data to Realm
+      try {
+        const farmerService = await getFarmerDataService();
+        await farmerService.updateFarmerData({
+          beePollination,
+          usedBees,
+          beeExperience,
+          whatWentWrong,
+          willingToPay,
+        });
+        showSuccess('Flower details saved successfully');
+      } catch (realmError) {
+        console.error('Error saving flower details:', realmError);
+        ShowError('Failed to save data. Please try again.');
+        return;
+      }
+
+      // Navigate to next screen
+      navigation.navigate(navigationStrings.BEEKEEPING_DETAILS as never);
+    } catch (error) {
+      console.error('Error navigating to beekeeping details:', error);
+      ShowError('Failed to proceed. Please try again.');
+    }
+  }, [navigation, beePollination, usedBees, beeExperience, whatWentWrong, willingToPay]);
 
   return (
     <ScrollView style={commonStyles.container}>

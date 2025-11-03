@@ -13,6 +13,8 @@ import colors from '../../constants/colors';
 import CustomButton from '../../components/CustomButton';
 import navigationStrings from '../../constants/navigationStrings';
 import { useNavigation } from '@react-navigation/native';
+import { getFarmerDataService } from '../../utils/realmService';
+import { ShowError, showSuccess } from '../../utils/helperFunctions';
 
 interface FertilizerOption {
   id: string;
@@ -218,9 +220,34 @@ const BeekeepingDetails = () => {
       .join(', ');
   }, [selectedPesticides, pesticideOptions]);
 
-  const handleComplete = useCallback(() => {
-    navigation.navigate(navigationStrings.FARMERHOME as never);
-  }, [navigation]);
+  const handleComplete = useCallback(async () => {
+    try {
+      // Save data to Realm
+      try {
+        const farmerService = await getFarmerDataService();
+        await farmerService.updateFarmerData({
+          fertilizers,
+          selectedFertilizers: selectedFertilizers,
+          pesticides,
+          selectedPesticides: selectedPesticides,
+          selectedRisks: selectedRisks,
+          selectedBeeBoxPhotos: selectedBeeBoxPhotos,
+          sendConsentForm,
+        });
+        showSuccess('Beekeeping details saved successfully');
+      } catch (realmError) {
+        console.error('Error saving beekeeping details:', realmError);
+        ShowError('Failed to save data. Please try again.');
+        return;
+      }
+
+      // Navigate to DetailsAdded screen
+      navigation.navigate(navigationStrings.DETAILS_ADDED as never);
+    } catch (error) {
+      console.error('Error navigating to details added:', error);
+      ShowError('Failed to proceed. Please try again.');
+    }
+  }, [navigation, fertilizers, selectedFertilizers, pesticides, selectedPesticides, selectedRisks, selectedBeeBoxPhotos, sendConsentForm]);
 
   return (
     <ScrollView style={commonStyles.container}>
