@@ -1,4 +1,4 @@
-import { ScrollView } from 'react-native';
+import { ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import NetInfo from '@react-native-community/netinfo';
@@ -146,75 +146,91 @@ const FarmerHome = () => {
   );
 
   return (
-    <ScrollView style={styles.container}>
-      <ScreenHeaderSection
-        currentPosition={0}
-        bottomLabelText="Farmer Profile"
-      />
-      <CustomInput
-        label="Enter full name"
-        placeholder="Enter name"
-        value={fullName}
-        onChangeText={setFullName}
-        number={1}
-        required
-      />
-      <CustomInput
-        label="Contact Number"
-        placeholder="Enter contact number"
-        value={contactNumber}
-        onChangeText={setContactNumber}
-        number={2}
-        keyboardType="numeric"
-        required
-      />
-      <CustomRadioButton
-        label="Select Gender"
-        options={genderOptions}
-        selectedValue={gender}
-        onValueChange={setGender}
-        number={3}
-        required
-      />
-      {shouldShowManualEntry ? (
-        <ManualLocationEntry
-          number={4}
-          required
-          state={locationData.state}
-          village={locationData.village}
-          blockName={locationData.blockName}
-          streetName={locationData.streetName}
-          plotNumber={locationData.plotNumber}
-          onStateChange={value => handleLocationDataChange('state', value)}
-          onVillageChange={value => handleLocationDataChange('village', value)}
-          onBlockNameChange={value =>
-            handleLocationDataChange('blockName', value)
-          }
-          onStreetNameChange={value =>
-            handleLocationDataChange('streetName', value)
-          }
-          onPlotNumberChange={value =>
-            handleLocationDataChange('plotNumber', value)
-          }
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
+      <ScrollView
+        style={styles.container}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+        // contentContainerStyle={{ flexGrow: 1 }}
+      >
+        <ScreenHeaderSection
+          currentPosition={0}
+          bottomLabelText="Farmer Profile"
         />
-      ) : (
-        <CustomLocationSelector
-          label="House location"
-          number={4}
+        <CustomInput
+          label="Enter full name"
+          placeholder="Enter name"
+          value={fullName}
+          onChangeText={setFullName}
+          number={1}
           required
-          onFetchLocation={() => {
-            navigation.navigate(navigationStrings.CURRENT_LOCATION as never);
-          }}
-          onEnterManually={handleEnterManually}
         />
-      )}
-      <CustomButton
-        title="Create Farmer Profile"
-        buttonColor={colors.primary}
-        onPress={handleNavigateToLandDetails}
-        style={styles.createProfileButton}
-      />
-    </ScrollView>
+        <CustomInput
+          label="Contact Number"
+          placeholder="Enter contact number"
+          value={contactNumber}
+          onChangeText={setContactNumber}
+          number={2}
+          keyboardType="numeric"
+          required
+        />
+        <CustomRadioButton
+          label="Select Gender"
+          options={genderOptions}
+          selectedValue={gender}
+          onValueChange={setGender}
+          number={3}
+          required
+        />
+        {shouldShowManualEntry ? (
+          <ManualLocationEntry
+            number={4}
+            required
+            state={locationData.state}
+            village={locationData.village}
+            blockName={locationData.blockName}
+            streetName={locationData.streetName}
+            plotNumber={locationData.plotNumber}
+            onStateChange={value => handleLocationDataChange('state', value)}
+            onVillageChange={value =>
+              handleLocationDataChange('village', value)
+            }
+            onBlockNameChange={value =>
+              handleLocationDataChange('blockName', value)
+            }
+            onStreetNameChange={value =>
+              handleLocationDataChange('streetName', value)
+            }
+            onPlotNumberChange={value =>
+              handleLocationDataChange('plotNumber', value)
+            }
+          />
+        ) : (
+          <CustomLocationSelector
+            label="House location"
+            number={4}
+            required
+            onFetchLocation={() => {
+              if (Platform.OS === 'android') {
+                ShowError('Google Mapkey required');
+                return;
+              }
+              navigation.navigate(navigationStrings.CURRENT_LOCATION as never);
+            }}
+            onEnterManually={handleEnterManually}
+          />
+        )}
+        <CustomButton
+          title="Create Farmer Profile"
+          buttonColor={colors.primary}
+          onPress={handleNavigateToLandDetails}
+          style={styles.createProfileButton}
+        />
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 

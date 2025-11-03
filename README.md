@@ -1,97 +1,171 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# BloomingReport
 
-# Getting Started
+A React Native mobile application for collecting and managing farmer data related to land, crops, flowers, and beekeeping activities.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+## Prerequisites
 
-## Step 1: Start Metro
+Before you begin, ensure you have the following installed:
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+- **Node.js** (>= 18) - [Download Node.js](https://nodejs.org/)
+- **npm** or **yarn** - Comes with Node.js
+- **React Native CLI** - Install globally with `npm install -g react-native-cli`
+- **Xcode** (for iOS development) - [Download Xcode](https://developer.apple.com/xcode/)
+- **Android Studio** (for Android development) - [Download Android Studio](https://developer.android.com/studio)
+- **Ruby** (>= 2.6.10) - For iOS CocoaPods
+- **Java Development Kit (JDK)** - Required for Android development
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+## Installation
+
+### 1. Clone the repository
 
 ```sh
-# Using npm
+git clone <repository-url>
+cd BloomingReport
+```
+
+### 2. Install dependencies
+
+```sh
+# Install Node.js dependencies
+npm install
+
+# OR using Yarn
+yarn install
+```
+
+### 3. iOS Setup (macOS only)
+
+If you're developing for iOS, install CocoaPods dependencies:
+
+```sh
+# Install Ruby gems (first time only)
+bundle install
+
+# Install CocoaPods dependencies
+cd ios
+bundle exec pod install
+cd ..
+```
+
+> **Note**: Make sure you have CocoaPods installed. If not, install it with `sudo gem install cocoapods`.
+
+### 4. Android Setup
+
+For Android development, ensure you have:
+- Android Studio installed
+- Android SDK configured
+- Android emulator set up or a physical device connected
+
+## Running the Project
+
+### Start Metro Bundler
+
+First, start the Metro JavaScript bundler in one terminal:
+
+```sh
 npm start
 
 # OR using Yarn
 yarn start
 ```
 
-## Step 2: Build and run your app
+### Run on iOS
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
-
-### Android
+In a new terminal window, run:
 
 ```sh
-# Using npm
-npm run android
-
-# OR using Yarn
-yarn android
-```
-
-### iOS
-
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
-```sh
-bundle install
-```
-
-Then, and every time you update your native dependencies, run:
-
-```sh
-bundle exec pod install
-```
-
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
-
-```sh
-# Using npm
 npm run ios
 
 # OR using Yarn
 yarn ios
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+This will:
+- Build the iOS app
+- Launch the iOS Simulator (or use a connected device)
+- Install and run the app
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+### Run on Android
 
-## Step 3: Modify your app
+In a new terminal window, run:
 
-Now that you have successfully run the app, let's make changes!
+```sh
+npm run android
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+# OR using Yarn
+yarn android
+```
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+This will:
+- Build the Android app
+- Launch the Android emulator (or use a connected device)
+- Install and run the app
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+> **Note**: Make sure you have an Android emulator running or a device connected via USB with debugging enabled.
 
-## Congratulations! :tada:
+## Additional Commands
 
-You've successfully run and modified your React Native App. :partying_face:
+```sh
+# Clean Android build
+npm run clean
 
-### Now what?
+# Run linting
+npm run lint
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+# Build Android release APK
+npm run build_android
+```
 
-# Troubleshooting
+## App Flow
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+BloomingReport follows a multi-step form flow to collect comprehensive farmer data:
 
-# Learn More
+### 1. **Farmer Profile** (FarmerHome)
+- Enter farmer's full name
+- Contact number
+- Gender selection
+- House location (automatic GPS or manual entry)
+  - State, Village, Block Name, Street Name, Plot Number
 
-To learn more about React Native, take a look at the following resources:
+### 2. **Land Details**
+- Select unit of area (Acre, Hectare, Katha, Bigha, Guntha)
+- Enter area of plantation
+- Geotag location (optional)
+- Select land holding type (Owned, Co-owned, Shared)
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+### 3. **Crop Details**
+- Select flower type
+- Enter hybrid crop variety
+- Current area of flowering
+- Blooming duration (start and end dates)
+- Upload photos of crops
+
+### 4. **Flower Details**
+- Interest in bee pollination
+- Previous bee usage experience
+- Willingness to pay for bee pollination services
+
+### 5. **Beekeeping Details**
+- Chemical fertilizer usage and types
+- Chemical pesticide usage and types
+- Risk factors
+- Upload bee box photos
+- Consent form preferences
+
+### 6. **Details Added** (Review Screen)
+- Display all collected information in organized sections
+- Review all entered data
+- Option to return to home screen
+
+### Key Features
+
+- **Offline Support**: Manual location entry when offline
+- **Data Persistence**: Uses Realm database for local storage
+- **Form Validation**: Comprehensive validation for all input fields
+- **Step Indicator**: Visual progress indicator throughout the flow
+- **Photo Upload**: Support for multiple photo uploads
+- **Location Services**: GPS-based location selection with fallback to manual entry
+
+## License
+
+This project is private and proprietary.

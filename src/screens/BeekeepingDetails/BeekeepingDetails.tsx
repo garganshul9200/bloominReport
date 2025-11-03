@@ -1,4 +1,8 @@
-import { ScrollView } from 'react-native';
+import {
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
 import React, { useState, useCallback, useMemo } from 'react';
 import ScreenHeaderSection from '../../components/ScreenHeaderSection';
 import { styles as commonStyles, styles } from '../FarmerHome/Styles';
@@ -250,11 +254,19 @@ const BeekeepingDetails = () => {
   }, [navigation, fertilizers, selectedFertilizers, pesticides, selectedPesticides, selectedRisks, selectedBeeBoxPhotos, sendConsentForm]);
 
   return (
-    <ScrollView style={commonStyles.container}>
-      <ScreenHeaderSection
-        currentPosition={4}
-        bottomLabelText="Beekeeping Details"
-      />
+    <KeyboardAvoidingView
+      style={commonStyles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
+      <ScrollView
+        style={commonStyles.container}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
+        <ScreenHeaderSection
+          currentPosition={4}
+          bottomLabelText="Beekeeping Details"
+        />
       <CustomRadioButton
         label="Do you use chemical Fertilizers?"
         options={yesNoOptions}
@@ -345,7 +357,8 @@ const BeekeepingDetails = () => {
         textColor={colors.white}
         style={{ marginVertical: moderateScale(24) }}
       />
-    </ScrollView>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 

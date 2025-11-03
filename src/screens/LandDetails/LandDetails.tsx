@@ -1,4 +1,9 @@
-import { ScrollView, View } from 'react-native';
+import {
+  ScrollView,
+  View,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
 import React, { useState, useCallback, useMemo } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { moderateScale } from 'react-native-size-matters';
@@ -105,53 +110,62 @@ const LandDetails = () => {
   }, [navigation, areaValue, unitOfArea, landHolding]);
 
   return (
-    <ScrollView style={styles.container}>
-      <ScreenHeaderSection currentPosition={1} bottomLabelText="Land Details" />
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
+      <ScrollView
+        style={styles.container}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
+        <ScreenHeaderSection currentPosition={1} bottomLabelText="Land Details" />
 
-      <CustomDropdown
-        label="Select Unit of Area"
-        placeholder="Select from list"
-        value={unitOfArea}
-        onPress={handleUnitOfAreaSelect}
-        required
-        mainStyles={styles.DropDownStyles}
-      />
-      <AreaInputWithUnit
-        label="Area of Plantation"
-        placeholder="Enter area of plantation"
-        value={areaValue}
-        unit={unitOfArea}
-        onAreaChange={setAreaValue}
-        number={2}
-        keyboardType="numeric"
-        required
-      />
-      <View style={styles.geotagButtonContainer}>
-        <GeotagButton onPress={handleGeotag} />
-      </View>
-      <CustomPickerModal
-        visible={showUnitModal}
-        title="Select Units"
-        options={AREA_UNITS}
-        selectedValue={unitOfArea}
-        onSelect={handleUnitSelect}
-        onClose={handleCloseModal}
-      />
-      <CustomRadioButton
-        label="Land Holding"
-        options={landHoldingRadioOptions}
-        selectedValue={landHolding}
-        onValueChange={setLandHolding}
-        number={3}
-        required
-      />
-      <CustomButton
-        title="Next"
-        buttonColor={colors.primary}
-        onPress={handleNext}
-        style={{ marginVertical: moderateScale(24) }}
-      />
-    </ScrollView>
+        <CustomDropdown
+          label="Select Unit of Area"
+          placeholder="Select from list"
+          value={unitOfArea}
+          onPress={handleUnitOfAreaSelect}
+          required
+          mainStyles={styles.DropDownStyles}
+        />
+        <AreaInputWithUnit
+          label="Area of Plantation"
+          placeholder="Enter area of plantation"
+          value={areaValue}
+          unit={unitOfArea}
+          onAreaChange={setAreaValue}
+          number={2}
+          keyboardType="numeric"
+          required
+        />
+        <View style={styles.geotagButtonContainer}>
+          <GeotagButton onPress={handleGeotag} />
+        </View>
+        <CustomPickerModal
+          visible={showUnitModal}
+          title="Select Units"
+          options={AREA_UNITS}
+          selectedValue={unitOfArea}
+          onSelect={handleUnitSelect}
+          onClose={handleCloseModal}
+        />
+        <CustomRadioButton
+          label="Land Holding"
+          options={landHoldingRadioOptions}
+          selectedValue={landHolding}
+          onValueChange={setLandHolding}
+          number={3}
+          required
+        />
+        <CustomButton
+          title="Next"
+          buttonColor={colors.primary}
+          onPress={handleNext}
+          style={{ marginVertical: moderateScale(24) }}
+        />
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 

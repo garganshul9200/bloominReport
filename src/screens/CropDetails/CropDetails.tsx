@@ -1,4 +1,11 @@
-import { ScrollView, View, Text, TouchableOpacity } from 'react-native';
+import {
+  ScrollView,
+  View,
+  Text,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
 import React, { useState, useCallback, useMemo } from 'react';
 import ScreenHeaderSection from '../../components/ScreenHeaderSection';
 import CustomDropdown from '../../components/CustomDropdown';
@@ -156,11 +163,19 @@ const CropDetails = () => {
   );
 
   return (
-    <ScrollView style={commonStyles.container}>
-      <ScreenHeaderSection
-        currentPosition={2}
-        bottomLabelText="Flowering Details (0 flower details recorded)"
-      />
+    <KeyboardAvoidingView
+      style={commonStyles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
+      <ScrollView
+        style={commonStyles.container}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
+        <ScreenHeaderSection
+          currentPosition={2}
+          bottomLabelText="Flowering Details (0 flower details recorded)"
+        />
       <CustomDropdown
         label="Flower 1"
         placeholder="Select from list"
@@ -302,7 +317,8 @@ const CropDetails = () => {
           style={styles.completeButton}
         />
       </View>
-    </ScrollView>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 

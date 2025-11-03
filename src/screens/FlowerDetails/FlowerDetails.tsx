@@ -1,4 +1,8 @@
-import { ScrollView } from 'react-native';
+import {
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
 import React, { useState, useCallback, useMemo } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import ScreenHeaderSection from '../../components/ScreenHeaderSection';
@@ -85,11 +89,19 @@ const FlowerDetails = () => {
   }, [navigation, beePollination, usedBees, beeExperience, whatWentWrong, willingToPay]);
 
   return (
-    <ScrollView style={commonStyles.container}>
-      <ScreenHeaderSection
-        currentPosition={3}
-        bottomLabelText="Flowering Details"
-      />
+    <KeyboardAvoidingView
+      style={commonStyles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
+      <ScrollView
+        style={commonStyles.container}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
+        <ScreenHeaderSection
+          currentPosition={3}
+          bottomLabelText="Flowering Details"
+        />
       <CustomRadioButton
         label="Are you interested in using bee pollination services on your farm?*"
         options={beePollinationOptions}
@@ -137,7 +149,8 @@ const FlowerDetails = () => {
         textColor={colors.white}
         style={styles.completeButton}
       />
-    </ScrollView>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
