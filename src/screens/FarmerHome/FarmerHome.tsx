@@ -11,6 +11,11 @@ import ManualLocationEntry from '../../components/ManualLocationEntry';
 import ScreenHeaderSection from '../../components/ScreenHeaderSection';
 import navigationStrings from '../../constants/navigationStrings';
 import { styles } from './Styles';
+import {
+  ShowError,
+  validateFields,
+  validateLocationData,
+} from '../../utils/helperFunctions';
 
 const FarmerHome = () => {
   const navigation = useNavigation();
@@ -81,8 +86,30 @@ const FarmerHome = () => {
   }, []);
 
   const handleNavigateToLandDetails = useCallback(() => {
-    navigation.navigate(navigationStrings.LAND_DETAILS as never);
-  }, [navigation]);
+    try {
+      // Validate required fields
+      const isValid = validateFields([
+        { value: fullName, fieldName: 'full name' },
+        { value: contactNumber, fieldName: 'contact number' },
+        { value: gender, fieldName: 'gender' },
+      ]);
+
+      if (!isValid) {
+        return;
+      }
+
+      // Validate location data
+      if (!validateLocationData(locationData, ['state', 'village'])) {
+        return;
+      }
+
+      // Navigate to next screen
+      navigation.navigate(navigationStrings.LAND_DETAILS as never);
+    } catch (error) {
+      console.error('Error navigating to land details:', error);
+      ShowError('Failed to proceed. Please try again.');
+    }
+  }, [navigation, fullName, contactNumber, gender, locationData]);
 
   const handleLocationDataChange = useCallback(
     (field: keyof typeof locationData, value: string) => {
@@ -154,7 +181,7 @@ const FarmerHome = () => {
           number={4}
           required
           onFetchLocation={() => {
-            // TODO: Implement location fetching
+            navigation.navigate(navigationStrings.CURRENT_LOCATION as never);
           }}
           onEnterManually={handleEnterManually}
         />

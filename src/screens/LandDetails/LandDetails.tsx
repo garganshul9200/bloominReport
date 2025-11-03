@@ -12,6 +12,7 @@ import CustomRadioButton from '../../components/CustomRadioButton';
 import CustomButton from '../../components/CustomButton';
 import navigationStrings from '../../constants/navigationStrings';
 import { styles } from './Styles';
+import { ShowError, validateFields } from '../../utils/helperFunctions';
 
 const LandDetails = () => {
   const navigation = useNavigation();
@@ -65,9 +66,27 @@ const LandDetails = () => {
     console.log('Geotag pressed');
   }, []);
 
+
   const handleNext = useCallback(() => {
-    navigation.navigate(navigationStrings.CROP_DETAILS as never);
-  }, [navigation]);
+    try {
+      // Validate required fields
+      const isValid = validateFields([
+        { value: areaValue, fieldName: 'area of plantation' },
+        { value: unitOfArea, fieldName: 'unit of area' },
+        { value: landHolding, fieldName: 'land holding' },
+      ]);
+
+      if (!isValid) {
+        return;
+      }
+
+      // Navigate to next screen
+      navigation.navigate(navigationStrings.CROP_DETAILS as never);
+    } catch (error) {
+      console.error('Error navigating to crop details:', error);
+      ShowError('Failed to proceed. Please try again.');
+    }
+  }, [navigation, areaValue, unitOfArea, landHolding]);
 
   return (
     <ScrollView style={styles.container}>

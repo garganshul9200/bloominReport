@@ -1,4 +1,4 @@
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, ViewStyle, StyleProp } from 'react-native';
 import React from 'react';
 import Imagepath from '../constants/Imagepath';
 import { moderateScale } from 'react-native-size-matters';
@@ -6,10 +6,10 @@ import colors from '../constants/colors';
 import FastImage from 'react-native-fast-image';
 import { useNavigation } from '@react-navigation/native';
 
-const Header = () => {
+const Header = ({ headerStyle }: { headerStyle?: StyleProp<ViewStyle> }) => {
   const navigation = useNavigation();
   return (
-    <View style={styles.header}>
+    <View style={[styles.header, headerStyle]}>
       <TouchableOpacity onPress={() => navigation.goBack()}>
         <FastImage
           // resizeMode="contain"

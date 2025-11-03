@@ -7,6 +7,7 @@ import LandDetails from '../screens/LandDetails/LandDetails';
 import CropDetails from '../screens/CropDetails/CropDetails';
 import FlowerDetails from '../screens/FlowerDetails/FlowerDetails';
 import BeekeepingDetails from '../screens/BeekeepingDetails/BeekeepingDetails';
+import CurrentLocation from '../screens/CurrentLocation/CurrentLocation';
 
 export default function Routes() {
   const Stack = createNativeStackNavigator();
@@ -35,6 +36,10 @@ export default function Routes() {
           <Stack.Screen
             name={navigationStrings.BEEKEEPING_DETAILS}
             component={BeekeepingDetails}
+          />
+          <Stack.Screen
+            name={navigationStrings.CURRENT_LOCATION}
+            component={CurrentLocation}
           />
           </>
         ) : (
