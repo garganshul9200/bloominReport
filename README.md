@@ -157,6 +157,9 @@ BloomingReport follows a multi-step form flow to collect comprehensive farmer da
 - Review all entered data
 - Option to return to home screen
 
+### Video of working flow
+https://drive.google.com/file/d/1AeccJp1cdkAvDv0izHsF-x9L8h08YjjA/view?usp=drivesdk
+
 ### Key Features
 
 - **Offline Support**: Manual location entry when offline
